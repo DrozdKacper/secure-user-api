@@ -5,6 +5,7 @@ import com.KacperDrozd.secure_user_api.filter.JwtAuthFilter;
 import com.KacperDrozd.secure_user_api.service.UserInfoService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,7 +37,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/welcome", "/auth/register", "/auth/login").permitAll()
-                        .requestMatchers("/auth/users", "/auth/users/{id}").hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.GET,    "/auth/users").hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.DELETE, "/auth/users/*").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
